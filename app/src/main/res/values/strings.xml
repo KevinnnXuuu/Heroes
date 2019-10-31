@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Heroes</string>
+    <string name="textView_name">HERO NAME</string>
+    <string name="textView_description_label">Description: </string>
+    <string name="textView_superpower_label">Superpower: </string>
+    <string name="textView_ranking_label">Ranking: </string>
+
+</resources>
