@@ -2,10 +2,16 @@ package com.example.heroes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -19,13 +25,15 @@ public class HeroesListActivity extends AppCompatActivity {
 
     public static final String TAG = "HeroListActivity";
     private ListView listViewHero;
-
+    private List heroList;
+    public static final String HERO = "Hero";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heroes_list);
         wireWidgets();
+        setListeners();
 
         InputStream jsonFileInputStream = getResources().openRawResource(R.raw.heroes);
         String hero = readTextFile(jsonFileInputStream);
@@ -38,8 +46,14 @@ public class HeroesListActivity extends AppCompatActivity {
         // verify that it read everything properly
         Log.d(TAG, "onCreate: " + heroList.toString());
 
-        ArrayAdapter adapter = new ArrayAdapter<Hero>(this, android.R.layout.simple_list_item_activated_1, heroList);
+        this.heroList = heroList;
+
+        ArrayAdapter adapter = new HeroAdapter(heroList);
         listViewHero.setAdapter(adapter);
+    }
+
+    private void setListeners() {
+        listViewHero.setOnItemClickListener();
     }
 
     private void wireWidgets() {
@@ -64,4 +78,44 @@ public class HeroesListActivity extends AppCompatActivity {
         }
         return outputStream.toString();
     }
+
+    private class HeroAdapter extends ArrayAdapter<Hero>{
+
+        private List<Hero> heroesList;
+        public HeroAdapter(List<Hero> heroesList) {
+            // since we're in the HeroListActivity class, we already have the context
+            super(HeroesListActivity.this, -1, heroesList);
+            this.heroesList = heroesList;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // 1. inflate a layout
+            LayoutInflater inflater = getLayoutInflater();
+
+            // check if convertview is null, if so, replace it
+            if(convertView == null) {
+
+                convertView = inflater.inflate(R.layout.item_hero, parent, false);
+            }
+
+            // 2. wire widgets & link the hero to those widgets
+            TextView textViewName = convertView.findViewById(R.id.textView_heroitem_name);
+            TextView textViewRank = convertView.findViewById(R.id.textView_heroitem_rank);
+            TextView textViewDescription = convertView.findViewById(R.id.textView_heroitem_description);
+
+            textViewName.setText(heroesList.get(position).getName());
+            textViewRank.setText(heroesList.get(position).getRanking());
+            textViewDescription.setText(heroesList.get(position).getDescription());
+
+            // set the values for each widget. use the position parameter variable
+            // to get the hero that you need out of the list
+            // and set the values for widgets
+
+            // 3. return inflated view
+            return convertView;
+
+        }
+    }
+
 }

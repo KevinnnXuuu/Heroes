@@ -57,7 +57,6 @@ public class Hero {
 
     @Override
     public String toString() {
-        return name + '\n' + description + '\n' + superpower + '\n' + ranking + '\n'
-                ;
+        return name + '\n' + description + '\n' + superpower + '\n' + ranking + '\n';
     }
 }
