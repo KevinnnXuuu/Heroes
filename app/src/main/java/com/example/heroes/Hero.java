@@ -1,18 +1,21 @@
 package com.example.heroes;
 
-public class Hero {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Hero implements Parcelable, Comparable<Hero>{
     private String name;
     private String description;
     private String superpower;
-    private String ranking;
+    private int  ranking;
     private String image;
 
-    public Hero(String name, String description, String superpower, String ranking, String image) {
-        this.name = name;
-        this.description = description;
-        this.superpower = superpower;
-        this.ranking = ranking;
-        this.image = image;
+    public Hero() {
+    }
+
+    @Override
+    public  int compareTo(Hero hero) {
+        return this.getName().compareTo(hero.getName());
     }
 
     public String getName() {
@@ -39,11 +42,11 @@ public class Hero {
         this.superpower = superpower;
     }
 
-    public String getRanking() {
+    public int getRanking() {
         return ranking;
     }
 
-    public void setRanking(String ranking) {
+    public void setRanking(int ranking) {
         this.ranking = ranking;
     }
 
@@ -59,4 +62,38 @@ public class Hero {
     public String toString() {
         return name + '\n' + description + '\n' + superpower + '\n' + ranking + '\n';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeString(this.superpower);
+        dest.writeInt(this.ranking);
+        dest.writeString(this.image);
+    }
+
+    protected Hero(Parcel in) {
+        this.name = in.readString();
+        this.description = in.readString();
+        this.superpower = in.readString();
+        this.ranking = in.readInt();
+        this.image = in.readString();
+    }
+
+    public static final Parcelable.Creator<Hero> CREATOR = new Parcelable.Creator<Hero>() {
+        @Override
+        public Hero createFromParcel(Parcel source) {
+            return new Hero(source);
+        }
+
+        @Override
+        public Hero[] newArray(int size) {
+            return new Hero[size];
+        }
+    };
 }

@@ -7,8 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,13 +24,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class HeroesListActivity extends AppCompatActivity {
 
     public static final String TAG = "HeroListActivity";
     private ListView listViewHero;
-    private List heroList;
+    private List<Hero> heroList;
+    public ArrayAdapter<Hero> heroAdapter;
     public static final String HERO = "Hero";
 
     @Override
@@ -42,18 +50,54 @@ public class HeroesListActivity extends AppCompatActivity {
         // read your json file into an array of questions
         Hero[] heroes =  gson.fromJson(hero, Hero[].class);
         // convert your array to a list using the Arrays utility class
-        List<Hero> heroList = Arrays.asList(heroes);
+        heroList = Arrays.asList(heroes);
         // verify that it read everything properly
         Log.d(TAG, "onCreate: " + heroList.toString());
 
-        this.heroList = heroList;
 
+        this.heroList = heroList;
         ArrayAdapter adapter = new HeroAdapter(heroList);
+        heroAdapter = adapter;
         listViewHero.setAdapter(adapter);
+    }
+    public boolean onCreateOptionsMenu (Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sort_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.sort_name:
+                Collections.sort(heroList);
+                heroAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.sort_rank:
+                Collections.sort(heroList, new Comparator<Hero>() {
+                    @Override
+                    public int compare(Hero hero, Hero t1) {
+                        return hero.getRanking()-t1.getRanking();
+                    }
+                });
+                heroAdapter.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setListeners() {
-        listViewHero.setOnItemClickListener();
+        listViewHero.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Hero hero = heroList.get(i);
+                Intent HeroIntent = new Intent(HeroesListActivity.this, HeroDetailActivity.class);
+                HeroIntent.putExtra(HERO, hero);
+                startActivity(HeroIntent);
+            }
+        });
     }
 
     private void wireWidgets() {
@@ -105,7 +149,7 @@ public class HeroesListActivity extends AppCompatActivity {
             TextView textViewDescription = convertView.findViewById(R.id.textView_heroitem_description);
 
             textViewName.setText(heroesList.get(position).getName());
-            textViewRank.setText(heroesList.get(position).getRanking());
+            textViewRank.setText(heroesList.get(position).getRanking()+"");
             textViewDescription.setText(heroesList.get(position).getDescription());
 
             // set the values for each widget. use the position parameter variable
@@ -117,5 +161,6 @@ public class HeroesListActivity extends AppCompatActivity {
 
         }
     }
+
 
 }
