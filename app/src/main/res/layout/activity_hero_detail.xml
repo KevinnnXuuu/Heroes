@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/textView_name"
-        android:layout_width="339dp"
+        android:layout_width="wrap_content"
         android:layout_height="87dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -18,10 +18,9 @@
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028" />
+        app:layout_constraintVertical_bias="0.036" />
 
     <TextView
         android:id="@+id/textView_description_label"
@@ -74,7 +73,7 @@
 
     <TextView
         android:id="@+id/textView_description"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="53dp"
         app:layout_constraintBottom_toTopOf="@+id/textView_superpower_label"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +83,7 @@
 
     <TextView
         android:id="@+id/textView_superpower"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="53dp"
         app:layout_constraintBottom_toTopOf="@+id/textView_ranking_label"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +93,7 @@
 
     <TextView
         android:id="@+id/textView_ranking"
-        android:layout_width="59dp"
+        android:layout_width="wrap_content"
         android:layout_height="46dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
